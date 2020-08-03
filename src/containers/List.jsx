@@ -3,6 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import SubHeader from '../components/Header/SubHeader';
 import ListItem from '../components/ListItem/ListItem';
+import { ListsContext } from '../context/ListsContextProvider';
+import { ItemsContext } from '../context/ItemsContextProvider';
 
 const ListItemWrapper = styled.div`
   display: flex;
@@ -16,30 +18,31 @@ const Alert = styled.span`
   text-align: center;
 `;
 
-function List({
-  items,
-  loading,
-  error,
-  list,
-  getListRequest,
-  getItemsRequest,
-  match,
-  history,
-}) {
+function List({ match, history }) {
+  const { list, getListRequest } = React.useContext(
+    ListsContext,
+  );
+  const {
+    loading,
+    error,
+    items,
+    getItemsRequest,
+  } = React.useContext(ItemsContext);
+
   React.useEffect(() => {
     if (!list.id) {
       getListRequest(match.params.id);
     }
 
-    if (!items.length > 0) {
+    if (!items.length) {
       getItemsRequest(match.params.id);
     }
   }, [
+    getItemsRequest,
+    getListRequest,
     items,
     list,
     match.params.id,
-    getItemsRequest,
-    getListRequest,
   ]);
 
   return !loading && !error ? (

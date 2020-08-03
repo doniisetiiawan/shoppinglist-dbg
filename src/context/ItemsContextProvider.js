@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types,react/jsx-filename-extension,no-prototype-builtins */
 import React from 'react';
 
+export const ItemsContext = React.createContext();
+
 const initialValue = {
   items: [],
   loading: true,
@@ -67,8 +69,6 @@ async function postData(dataSource, content) {
     return { data: false, error: error.message };
   }
 }
-
-export const ItemsContext = React.createContext();
 
 const ItemsContextProvider = ({ children }) => {
   const [value, dispatch] = React.useReducer(

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Button from '../components/Button/Button';
 import SubHeader from '../components/Header/SubHeader';
 import FormItem from '../components/FormItem/formItem';
+import { ItemsContext } from '../context/ItemsContextProvider';
 
 const FormWrapper = styled.div`
   display: flex;
@@ -17,7 +18,8 @@ const SubmitButton = styled(Button)`
   margin: 2% 0;
 `;
 
-function Form({ addItemRequest, match, history }) {
+function Form({ match, history }) {
+  const { addItemRequest } = React.useContext(ItemsContext);
   const [title, setTitle] = React.useState('');
   const [quantity, setQuantity] = React.useState('');
   const [price, setPrice] = React.useState('');
