@@ -12,6 +12,7 @@ import List from './List';
 import ItemsContextProvider, {
   ItemsContext,
 } from '../context/ItemsContextProvider';
+import Form from './form';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -38,9 +39,22 @@ function App() {
         <ListsContextProvider>
           <ItemsContextProvider>
             <ListsContext.Consumer>
-              {({ lists }) => (
+              {({
+                list,
+                lists,
+                loading: listsLoading,
+                error: listsError,
+                getListsRequest,
+                getListRequest,
+              }) => (
                 <ItemsContext.Consumer>
-                  {({ items }) => (
+                  {({
+                    items,
+                    loading: itemsLoading,
+                    error: itemsError,
+                    getItemsRequest,
+                    addItemRequest,
+                  }) => (
                     <Switch>
                       <Route
                         exact
@@ -48,17 +62,39 @@ function App() {
                         render={(props) => lists && (
                         <Lists
                           lists={lists}
+                          loading={listsLoading}
+                          error={listsError}
+                          getListsRequest={
+                                getListsRequest
+                              }
                           {...props}
                         />
                         )}
                       />
                       <Route
+                        path="/list/:id/new"
+                        render={(props) => (
+                          <Form
+                            addItemRequest={addItemRequest}
+                            {...props}
+                          />
+                        )}
+                      />
+                      <Route
                         path="/list/:id"
-                        render={(props) => lists
+                        render={(props) => list
                           && items && (
                             <List
-                              lists={lists}
-                              listItems={items}
+                              list={list}
+                              items={items}
+                              loading={itemsLoading}
+                              error={itemsError}
+                              getListRequest={
+                                getListRequest
+                              }
+                              getItemsRequest={
+                                getItemsRequest
+                              }
                               {...props}
                             />
                         )}

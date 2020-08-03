@@ -11,22 +11,38 @@ const ListItemWrapper = styled.div`
   margin: 2% 5%;
 `;
 
+const Alert = styled.span`
+  width: 100%;
+  text-align: center;
+`;
+
 function List({
-  lists,
-  listItems,
+  items,
+  loading,
+  error,
+  list,
+  getListRequest,
+  getItemsRequest,
   match,
   history,
 }) {
-  const items = listItems
-    && listItems.filter(
-      (item) => item.listId === parseInt(match.params.id, 10),
-    );
-  const list = lists
-    && lists.find(
-      (list) => list.id === parseInt(match.params.id, 10),
-    );
+  React.useEffect(() => {
+    if (!list.id) {
+      getListRequest(match.params.id);
+    }
 
-  return (
+    if (!items.length > 0) {
+      getItemsRequest(match.params.id);
+    }
+  }, [
+    items,
+    list,
+    match.params.id,
+    getItemsRequest,
+    getListRequest,
+  ]);
+
+  return !loading && !error ? (
     <>
       {history && list && (
         <SubHeader
@@ -35,7 +51,6 @@ function List({
           openForm={() => history.push(`${match.url}/new`)}
         />
       )}
-
       <ListItemWrapper>
         {items
           && items.map((item) => (
@@ -43,6 +58,8 @@ function List({
           ))}
       </ListItemWrapper>
     </>
+  ) : (
+    <Alert>{loading ? 'Loading...' : error}</Alert>
   );
 }
 

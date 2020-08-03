@@ -35,24 +35,21 @@ const Alert = styled.span`
 
 function Lists({
   lists,
-  loading = false,
-  error = false,
+  loading,
+  error,
+  getListsRequest,
   history,
 }) {
-  return (
+  React.useEffect(() => {
+    if (!lists.length) {
+      getListsRequest();
+    }
+  }, [lists, getListsRequest]);
+
+  return !loading && !error ? (
     <>
-      {history && (
-        <SubHeader
-          title="Your Lists"
-          openForm={() => history.push('/new')}
-        />
-      )}
-
+      {history && <SubHeader title="Your Lists" />}
       <ListWrapper>
-        {(loading || error) && (
-          <Alert>{loading ? 'Loading...' : error}</Alert>
-        )}
-
         {lists
           && lists.map((list) => (
             <ListLink key={list.id} to={`list/${list.id}`}>
@@ -61,6 +58,8 @@ function Lists({
           ))}
       </ListWrapper>
     </>
+  ) : (
+    <Alert>{loading ? 'Loading...' : error}</Alert>
   );
 }
 
